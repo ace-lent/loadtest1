@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Calculator</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Shinichi's Calculator</h1>
+        <form id="calculator-form">
+            <input type="number" id="op1" placeholder="First number" required>
+            <select id="operator">
+                <option value="add">+</option>
+                <option value="subtract">-</option>
+                <option value="multiply">*</option>
+                <option value="divide">/</option>
+            </select>
+            <input type="number" id="op2" placeholder="Second number" required>
+            <button type="submit">Calculate</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('calculator-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const op1 = document.getElementById('op1').value;
+            const op2 = document.getElementById('op2').value;
+            const operator = document.getElementById('operator').value;
+            
+            const response = await fetch(`/calculate?op1=${op1}&op2=${op2}&operator=${operator}`);
+            const data = await response.json();
+
+            const resultDiv = document.getElementById('result');
+            if (data.error) {
+                resultDiv.innerHTML = `<p class="error">${data.error}</p>`;
+            } else {
+                resultDiv.innerHTML = `<p class="success">Result: ${data.result}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
